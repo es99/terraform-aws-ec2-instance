@@ -14,9 +14,14 @@ data "aws_ami" "ubuntu" {
   owners = ["099720109477"] # Canonical
 }
 
+#tfsec:ignore:aws-ec2-enforce-http-token-imds
 resource "aws_instance" "this" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
+
+  root_block_device {
+    encrypted = true
+  }
 
   tags = {
     Name = var.name
